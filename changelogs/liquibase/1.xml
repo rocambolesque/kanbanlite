@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="1" author="rocambolesque">
+        <createTable tableName="card">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="rocambolesque">
+        <createTable tableName="status">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="label" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="rocambolesque">
+        <createTable tableName="owner">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="rocambolesque">
+        <createTable tableName="card_status_owner">
+            <column name="card_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="createdAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="card_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_card_id"
+            referencedColumnNames="id"
+            referencedTableName="card" />
+    </changeSet>
+
+    <changeSet id="6" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="status_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_status_id"
+            referencedColumnNames="id"
+            referencedTableName="status" />
+    </changeSet>
+
+    <changeSet id="7" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="owner_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_owner_id"
+            referencedColumnNames="id"
+            referencedTableName="owner" />
+    </changeSet>
+
+    <changeSet id="8" author="rocambolesque">
+        <addAutoIncrement
+            columnDataType="int"
+            columnName="id"
+            incrementBy="1"
+            tableName="status"/>
+        <addAutoIncrement
+            columnDataType="int"
+            columnName="id"
+            incrementBy="1"
+            tableName="owner"/>
+        <addAutoIncrement
+            columnDataType="int"
+            columnName="id"
+            incrementBy="1"
+            tableName="card"/>
+    </changeSet>
+
+    <changeSet id="9" author="rocambolesque">
+        <insert tableName="status">
+            <column name="label" value="To do"/>
+        </insert>
+    </changeSet>
+    <changeSet id="10" author="rocambolesque">
+        <insert tableName="status">
+            <column name="label" value="Doing"/>
+        </insert>
+    </changeSet>
+    <changeSet id="11" author="rocambolesque">
+        <insert tableName="status">
+            <column name="label" value="Done"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="12" author="rocambolesque">
+        <insert tableName="owner">
+            <column name="name" value="Pierre"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

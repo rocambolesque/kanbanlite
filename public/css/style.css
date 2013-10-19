@@ -1,0 +1,21 @@
+.draggable {
+    width:140px;
+    height:65px;
+    text-align:center;
+    border:1px solid #dddddd;
+    margin:5px;
+}
+
+.draggable.is-dragging {
+    border: 1px dotted black;
+    background-color: lightgray;
+}
+
+.draggable.is-dragging {
+    border: 1px dotted black;
+    background-color: lightgray;
+}
+
+.droppable.is-drag-over {
+    background-color: #dff0d8;
+}

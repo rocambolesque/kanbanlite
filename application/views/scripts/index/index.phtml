@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="js/libs/jquery-1.9.1.js" type="text/javascript"></script>
+        <script src="js/libs/bootstrap.js" type="text/javascript"></script>
+        <script src="js/libs/handlebars-1.0.0.js" type="text/javascript"></script>
+        <script src="js/libs/ember.js" type="text/javascript"></script>
+        <script src="js/libs/ember-data.js" type="text/javascript"></script>
+
+        <script src="js/app.js" type="text/javascript"></script>
+
+        <script src="js/controllers/CardsController.js" type="text/javascript"></script>
+        <script src="js/controllers/CardController.js" type="text/javascript"></script>
+        <script src="js/controllers/NewController.js" type="text/javascript"></script>
+
+        <script src="js/routes/NewRoute.js" type="text/javascript"></script>
+        <script src="js/routes/CardRoute.js" type="text/javascript"></script>
+        <script src="js/routes/CardsRoute.js" type="text/javascript"></script>
+        <script src="js/routes/IndexRoute.js" type="text/javascript"></script>
+
+        <script src="js/models/Card.js" type="text/javascript"></script>
+        <script src="js/models/Status.js" type="text/javascript"></script>
+        <script src="js/models/Owner.js" type="text/javascript"></script>
+
+        <script src="js/mixins/DraggableView.js" type="text/javascript"></script>
+        <script src="js/mixins/DroppableView.js" type="text/javascript"></script>
+
+        <script src="js/views/DraggableCard.js" type="text/javascript"></script>
+        <script src="js/views/DroppableStatusZone.js" type="text/javascript"></script>
+
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+    </head>
+    <body>
+        <script type="text/x-handlebars" data-template-name="cards">
+            <div class="row">
+                <div class="col-md-1">{{#linkTo 'new' class="btn btn-primary"}}New card{{/linkTo}}</div>
+                <div class="col-md-3">{{ partial "search" }}</div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>TODO</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            {{input type="hidden" class="card-status" value=todo}}
+                            {{view App.DroppableStatusZoneView contentBinding=todoCards}}
+                        </div>
+                        <div>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>DOING</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            {{input type="hidden" class="card-status" value=doing}}
+                            {{view App.DroppableStatusZoneView contentBinding=doingCards}}
+                        </div>
+                        <div>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>DONE</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            {{input type="hidden" class="card-status" value=done}}
+                            {{view App.DroppableStatusZoneView contentBinding=doneCards}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="_card">
+            {{input type="hidden" value=card.id}}
+            <div>
+                <b>{{#linkTo 'card' card.id}}{{card.title}}{{/linkTo}}</b><br/>
+                {{card.created_at}}
+            </div>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="droppable-status-zone">
+            <div class="row">
+                {{#each card in view.content}}
+                    <div class="col-md-1">{{view App.DraggableCardView}}</div>
+                {{/each}}
+            </div>
+            {{#if view.didReceiveDrop}}
+                <em>{{view.droppedElementId}}</em> was dropped on me.
+            {{/if}}
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="new">
+            {{partial "cardForm"}}
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="card">
+            {{partial "cardForm"}}
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="_cardForm">
+            <form {{action save on="submit"}}>
+                <table>
+                    <tr>
+                        <td>
+                            {{view Ember.TextField valueBinding="title" id="title" placeholder="Title" required="true"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{view Ember.TextArea valueBinding="description" id="description" placeholder="Description" required="false"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{view Ember.Select 
+                                    contentBinding="statuses"
+                                    optionValuePath="content.id"
+                                    optionLabelPath="content.label"
+                                    valueBinding="selectedStatus"
+                                    required="true"
+                            }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{view Ember.Select 
+                                    contentBinding="owners"
+                                    optionValuePath="content.id"
+                                    optionLabelPath="content.name"
+                                    valueBinding="selectedOwner"
+                                    required="false"
+                            }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-primary">Save card</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="_search">
+            <form {{ action search on="submit" }}>
+                <table>
+                    <tr>
+                        <td>
+                            {{view Ember.TextField valueBinding="created_at_from" id="created_at_from" placeholder="From" required="false"}}
+                        </td>
+                        <td>
+                            {{view Ember.TextField valueBinding="created_at_to" id="created_at_to" placeholder="To" required="false"}}
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </td>
+                    </tr>
+                 </table>
+            </form>
+        </script>
+
+    </body>
+</html>

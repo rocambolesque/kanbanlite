@@ -1,0 +1,1 @@
+./vendor/liquibase/liquibase --driver=com.mysql.jdbc.Driver --classpath=vendor/mysql/mysql-connector-java-5.1.26/mysql-connector-java-5.1.26-bin.jar --changeLogFile=changelogs/liquibase/master.xml --url="jdbc:mysql://localhost/kanbanlite" --username=root --password=root migrate

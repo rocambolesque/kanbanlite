@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="1" author="rocambolesque">
+       <renameColumn
+          columnDataType="datetime"
+          newColumnName="created_at"
+          oldColumnName="createdAt"
+          tableName="card_status_owner"/>
+    </changeSet>
+
+    <changeSet id="2" author="rocambolesque">
+        <addColumn tableName="card_status_owner">
+            <column name="id" type="int"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3" author="rocambolesque">
+        <dropForeignKeyConstraint
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_card_id"/>
+    </changeSet>
+
+    <changeSet id="4" author="rocambolesque">
+        <dropForeignKeyConstraint
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_status_id"/>
+    </changeSet>
+
+    <changeSet id="5" author="rocambolesque">
+        <dropForeignKeyConstraint
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_owner_id"/>
+    </changeSet>
+
+    <changeSet id="6" author="rocambolesque">
+        <dropPrimaryKey tableName="card_status_owner" />
+    </changeSet>
+
+    <changeSet id="7" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="card_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_card_id"
+            referencedColumnNames="id"
+            referencedTableName="card" />
+    </changeSet>
+
+    <changeSet id="8" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="status_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_status_id"
+            referencedColumnNames="id"
+            referencedTableName="status" />
+    </changeSet>
+
+    <changeSet id="9" author="rocambolesque">
+        <addForeignKeyConstraint
+            baseColumnNames="owner_id"
+            baseTableName="card_status_owner"
+            constraintName="card_card_status_owner_owner_id"
+            referencedColumnNames="id"
+            referencedTableName="owner" />
+    </changeSet>
+
+    <changeSet id="10" author="rocambolesque">
+        <addPrimaryKey
+            columnNames="id"
+            constraintName="pk_card_status_owner"
+            tableName="card_status_owner"/>
+    </changeSet>
+
+
+    <changeSet id="11" author="rocambolesque">
+        <addAutoIncrement
+            columnDataType="int"
+            columnName="id"
+            incrementBy="1"
+            tableName="card_status_owner"/>
+    </changeSet>
+
+    <changeSet id="12" author="rocambolesque">
+        <addUniqueConstraint
+            columnNames="card_id, status_id, owner_id"
+            constraintName="card_status_owner_card_id_status_id_owner_id"
+            tableName="card_status_owner"/>
+    </changeSet>
+</databaseChangeLog>
